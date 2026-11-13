@@ -1,0 +1,198 @@
+:root {
+  --night: #0c0e1f;
+  --indigo: #1c2150;
+  --dusk: #3a2f63;
+  --rose: #e7a39a;
+  --amber: #f4d6a4;
+  --mist: #c9cde8;
+  --breath: 8s;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body { height: 100%; }
+
+body {
+  background: var(--night);
+  color: var(--mist);
+  font-family: 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  overflow: hidden;
+}
+
+/* ---------- Atmosphere ---------- */
+.sky {
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 50% 108%, rgba(231,163,154,.38), transparent 70%),
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(244,214,164,.22), transparent 65%),
+    linear-gradient(180deg, var(--night) 0%, var(--indigo) 55%, var(--dusk) 100%);
+  transition: filter 2s ease;
+}
+body.playing .sky { filter: saturate(1.25) brightness(1.08); }
+
+#motes { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* soft water line with the orb's reflection */
+.horizon {
+  position: fixed; left: 0; right: 0; bottom: 0; height: 26vh;
+  background: linear-gradient(180deg, rgba(12,14,31,0) 0%, rgba(12,14,31,.55) 100%);
+  pointer-events: none;
+}
+
+/* ---------- Layout ---------- */
+.stage {
+  position: relative;
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto 1fr auto auto;
+  justify-items: center;
+  align-items: center;
+  padding: clamp(1.5rem, 5vh, 3rem) 1.5rem clamp(1.5rem, 5vh, 3rem);
+  text-align: center;
+}
+
+.brand h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 2.8rem);
+  letter-spacing: .08em;
+  color: #f3efff;
+}
+.session-time {
+  margin-top: .35rem;
+  font-size: .85rem;
+  font-weight: 300;
+  letter-spacing: .12em;
+  font-variant-numeric: tabular-nums;
+  color: rgba(201,205,232,.6);
+}
+
+/* ---------- Orb ---------- */
+.orb-wrapper {
+  position: relative;
+  width: min(62vw, 320px);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+}
+
+.orb-core, .orb-halo, .ring {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.orb-core {
+  width: 42%; height: 42%;
+  background: radial-gradient(circle at 35% 30%, #fff6e2 0%, var(--amber) 35%, var(--rose) 100%);
+  box-shadow: 0 0 60px rgba(244,214,164,.55), 0 0 140px rgba(231,163,154,.35);
+  transform: scale(.85);
+}
+.orb-halo {
+  width: 100%; height: 100%;
+  background: radial-gradient(circle, rgba(244,214,164,.32) 0%, rgba(231,163,154,.12) 45%, transparent 70%);
+  transform: scale(.8);
+  opacity: .5;
+}
+.ring {
+  width: 60%; height: 60%;
+  border: 1px solid rgba(244,214,164,.4);
+  opacity: 0;
+}
+
+.breathing .orb-core { animation: coreBreath var(--breath) ease-in-out infinite; }
+.breathing .orb-halo { animation: haloBreath var(--breath) ease-in-out infinite; }
+.breathing .ring     { animation: ripple var(--breath) ease-out infinite; }
+.breathing .r2 { animation-delay: calc(var(--breath) / -3); }
+.breathing .r3 { animation-delay: calc(var(--breath) / -1.5); }
+
+@keyframes coreBreath {
+  0%, 100% { transform: scale(.85); }
+  50%      { transform: scale(1.25); }
+}
+@keyframes haloBreath {
+  0%, 100% { transform: scale(.8);  opacity: .45; }
+  50%      { transform: scale(1.2); opacity: 1; }
+}
+@keyframes ripple {
+  0%   { transform: scale(.7); opacity: .55; }
+  100% { transform: scale(1.7); opacity: 0; }
+}
+
+/* ---------- Breath text ---------- */
+.breath-guide {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  color: #f3efff;
+  min-height: 2.4rem;
+  margin-bottom: 2.2rem;
+  transition: opacity .8s ease;
+}
+.breath-guide.fade { opacity: 0; }
+
+/* ---------- Controls ---------- */
+.dock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .8rem;
+}
+
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--amber); outline-offset: 4px; }
+
+.play {
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: linear-gradient(145deg, rgba(244,214,164,.95), rgba(231,163,154,.9));
+  color: #2a2148;
+  box-shadow: 0 10px 40px rgba(231,163,154,.35);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.play:hover { transform: scale(1.06); box-shadow: 0 14px 50px rgba(231,163,154,.5); }
+.play:active { transform: scale(.97); }
+.play .icon { width: 30px; height: 30px; fill: currentColor; grid-area: 1 / 1; }
+.icon-pause { display: none; }
+body.playing .icon-play { display: none; }
+body.playing .icon-pause { display: block; }
+
+.btn-label { font-size: .85rem; font-weight: 400; letter-spacing: .06em; color: rgba(201,205,232,.75); }
+
+.volume-control {
+  margin-top: 1.1rem;
+  display: flex; align-items: center; gap: .7rem;
+  opacity: .75; transition: opacity .3s ease;
+}
+.volume-control:hover, .volume-control:focus-within { opacity: 1; }
+
+.mute { width: 28px; height: 28px; display: grid; place-items: center; }
+.mute svg { width: 22px; height: 22px; fill: var(--mist); stroke: var(--mist); stroke-width: 1.6; stroke-linecap: round; }
+.mute svg path:first-child { stroke: none; }
+.mute.muted .wave { display: none; }
+
+input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 150px; height: 4px; border-radius: 4px; outline-offset: 6px;
+  background: linear-gradient(90deg, var(--amber) var(--fill, 70%), rgba(255,255,255,.16) var(--fill, 70%));
+  cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%;
+  background: var(--amber); box-shadow: 0 0 12px rgba(244,214,164,.7);
+}
+input[type="range"]::-moz-range-thumb {
+  width: 14px; height: 14px; border: 0; border-radius: 50%;
+  background: var(--amber); box-shadow: 0 0 12px rgba(244,214,164,.7);
+}
+
+@media (max-height: 640px) {
+  .orb-wrapper { width: min(40vh, 62vw); }
+  .breath-guide { margin-bottom: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breathing .orb-core, .breathing .orb-halo, .breathing .ring { animation-duration: 16s; }
+  #motes { display: none; }
+}

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stillness · Meditation Music</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true"></div>
+  <canvas id="motes" aria-hidden="true"></canvas>
+  <div class="horizon" aria-hidden="true"></div>
+
+  <main class="stage">
+    <header class="brand">
+      <h1>Stillness</h1>
+      <p class="session-time" id="session-time" aria-label="Session time">00:00</p>
+    </header>
+
+    <section class="orb-wrapper" id="orb-wrapper" aria-hidden="true">
+      <span class="ring r1"></span>
+      <span class="ring r2"></span>
+      <span class="ring r3"></span>
+      <div class="orb-halo"></div>
+      <div class="orb-core"></div>
+    </section>
+
+    <p class="breath-guide" id="breath-guide" aria-live="polite">Take a slow, deep breath</p>
+
+    <audio id="bg-music" src="Music.mp3" loop preload="auto"></audio>
+
+    <footer class="dock">
+      <button id="toggle-btn" class="play" aria-label="Begin session">
+        <svg class="icon icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+        <svg class="icon icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+      </button>
+      <span class="btn-label" id="btn-label">Begin session</span>
+
+      <div class="volume-control">
+        <button id="mute-btn" class="mute" aria-label="Mute">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path class="wave" d="M15 9a4 4 0 0 1 0 6M17.5 6.5a7.5 7.5 0 0 1 0 11" fill="none"/></svg>
+        </button>
+        <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.7" aria-label="Volume">
+      </div>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
